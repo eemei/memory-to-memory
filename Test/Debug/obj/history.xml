@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m4 -mthumb -g2 -Wall -O0 -c -DSTM32F429ZI -DSTM32F429xx -DSTM32F429_439xx -II:\DMA_memory to memory\app\Config -II:\DMA_memory to memory\app\Core -II:\DMA_memory to memory\app -II:\DMA_memory to memory -II:\DMA_memory to memory\app\hardware -II:\">
+      <target file="RCC.o" lastModified="1511aff9440">
+         <source file="..\..\..\app\RCC.c" lastModified="1511931c980"/>
+      </target>
+      <target file="system_stm32f4xx.o" lastModified="1511aff9c10">
+         <source file="..\..\..\app\Config\system_stm32f4xx.c" lastModified="150fcc70990"/>
+      </target>
+      <target file="DMA.o" lastModified="1511b348ec0">
+         <source file="..\..\..\app\DMA.c" lastModified="1511b347f20"/>
+      </target>
+      <target file="main.o" lastModified="1511aff9440">
+         <source file="..\..\..\app\main.c" lastModified="15119829130"/>
+      </target>
+      <target file="startup_stm32f429xx.o" lastModified="1511aff9440">
+         <source file="..\..\..\app\Config\startup_stm32f429xx.s" lastModified="14c21982f60"/>
+      </target>
+   </processor>
+</history>

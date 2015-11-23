@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -g2 -Map=Test.map -O0 --gc-sections -LI:/DMA_memory to memory -TI:/DMA_memory to memory/stm32f429zi_flash.ld -g">
+      <target file="Test.elf" lastModified="1511b349e60">
+         <source file="..\obj\main.o" lastModified="1511aff9440"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="1511aff9c10"/>
+         <source file="..\obj\DMA.o" lastModified="1511b348ec0"/>
+         <source file="..\obj\startup_stm32f429xx.o" lastModified="1511aff9440"/>
+         <source file="..\obj\RCC.o" lastModified="1511aff9440"/>
+      </target>
+   </processor>
+</history>
