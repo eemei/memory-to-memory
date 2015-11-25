@@ -61,11 +61,63 @@ struct DMA_t{
 };
 
 
-
 #define dma2 ((DMA_reg*)0x40026400)
+
+#define channel0	0
+#define channel1	1
+#define channel2	2
+#define channel3	3
+#define channel4	4
+#define channel5	5
+#define channel6	6
+#define channel7	7
+
+#define P2M	0
+#define M2P	1
+#define M2M	2
+
+#define Priority_Low		0
+#define Priority_Medium		1
+#define Priority_High		2
+#define Priority_VeryHigh	3
+
+#define DMA_PeripheralInc_Enable	1
+#define DMA_PeripheralInc_Disable	0
+
+#define DMA_MemoryInc_Enable		1
+#define DMA_MemoryInc_Disable		0
+
+#define DMA_MemoryBurst_Single	0
+#define DMA_MemoryBurst_Incr4	1
+#define DMA_MemoryBurst_Incr8	2
+#define DMA_MemoryBurst_Incr16	3
+
+#define DMA_PeripheralBurst_Single	0
+#define DMA_PeripheralBurst_Incr4	1
+#define DMA_PeripheralBurst_Incr8	2
+#define DMA_PeripheralBurst_Incr16	3
+
+
+#define dataAdressSource		0xAAAAAAAA
+#define dataAdressDestination	0xFFFFFFFF
+
+#define DMA_MemoryDataSize_byte 	0
+#define DMA_MemoryDataSize_halfword 1
+#define DMA_MemoryDataSize_Word 	2
+#define DMA_MemoryDataSize_reserved 3
+
+#define DMA_PeripheralDataSize_byte		0
+#define DMA_PeripheralDataSize_halfword	1
+#define DMA_PeripheralDataSize_Word 	2
+#define DMA_PeripheralDataSize_reserved	3
+
+#define TC_interrupt_disabled 0
+#define TC_interrupt_enabled  1
 
 #define ARRAYSIZE 800
 
-
+void configDMAM2M();
+void resetTransferCompleteError();
+int getStatus();
 
 #endif	//__DMA_H__

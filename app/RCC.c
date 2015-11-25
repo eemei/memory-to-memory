@@ -6,6 +6,7 @@ void DMAUnresetEnableClock(){
 	rcc->RCC_AHB1RSTR &= (1 << 22); 	//DMA2RST
 	rcc->RCC_AHB1ENR  |= (1 << 22);		//DMA2EN
 
+
 }
 
 
