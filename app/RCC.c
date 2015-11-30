@@ -5,10 +5,13 @@ void DMAUnresetEnableClock(){
 
 	rcc->RCC_AHB1RSTR &= (1 << 22); 	//DMA2RST
 	rcc->RCC_AHB1ENR  |= (1 << 22);		//DMA2EN
-
-
 }
 
+void gpioUnresetEnableClock(GPIO* port){
+	int shift = ((int)port - (0x40020000))/(0x400);
+	rcc->RCC_AHB1RSTR &= ~(1 << (shift));
+	rcc->RCC_AHB1ENR |= (0x00100000 | ~(0 << (shift)));
+}
 
 //rcc->RCC_AHB1RSTR &= (1 << 21);		//DMA1RST
 		//rcc->RCC_AHB1ENR  |= (1 << 21);		//DMA1EN

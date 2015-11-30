@@ -115,6 +115,7 @@ struct DMA_t{
 #define TC_interrupt_enabled  1
 
 #define ARRAYSIZE 800
+#define DMA_STREAM_IRQHANDLER    DMA2_Stream0_IRQHandler
 
 void configDMAM2M();
 void resetTransferCompleteError();

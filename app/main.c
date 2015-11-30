@@ -1,4 +1,5 @@
 #include "stm32f4xx.h"
+#include "DMA.h"
 //#include "stm32f4xx_hal_dma.h"
 
 
@@ -19,13 +20,13 @@ void DMA2_Stream7_IRQHandler(){
 }
 
 
-void main(void){
+void main(){
 	int i;
 	DMAUnresetEnableClock();
 
 	configDMAM2M();
 	 /* Enable the transfer complete interrupt */
-	  __HAL_DMA_ENABLE_IT(hdma, DMA_IT_TC);
+	//  __HAL_DMA_ENABLE_IT(hdma, DMA_IT_TC);
 
 
 

@@ -1,4 +1,8 @@
 #include "DMA.h"
+#include "stm32f4xx.h"
+#include "stm32f4xx_hal_dma.h"
+#include "stm32f4xx.h"
+#include "gpio.h"
 
 /**
   * @brief  Configure the DMA controller according to the Stream parameters
@@ -77,8 +81,26 @@ void configDMAM2M() {  // stream 7  channel 0
 
 	dma2->DMA_S7CR |= (1 << 0);					/*	ENABLE STREAM FLAG */
 
+	// Enable DMA1 Channel Transfer Complete interrupt
+	//DMA_ITConfig(DMA2_Channel0, DMA_IT_TC, ENABLE);
+	//interrupt
+	NVIC_EnableIRQ (DMA2_Stream7_IRQn);
+	DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
+
 }
 
+void DMA2_Channel0_IRQHandler(void)
+{
+  //Test on DMA2 Channel0 Transfer Complete interrupt
+  if(DMA_GetITStatus(DMA2_IT_TC0))
+  {
+      uint32_t status=1;
+      toggleLED ();
+      // LEDToggle(LEDG);
+   //Clear DMA2 Channel0 Half Transfer, Transfer Complete and Global interrupt pending bits
+    DMA_ClearITPendingBit(DMA2_IT_GL0);
+  }
+}
 
 void resetTransferCompleteError(){
 	uint32_t status;
@@ -103,16 +125,6 @@ int getStatus(){
 
 
 
-//void DMA2_Stream7_IRQHandler() {
-  //Test on DMA2 Channel0 Transfer Complete interrupt
-  //if(DMA_GetITStatus(DMA2_IT_TC1))
-  //{
-      //status=1;
-      //LEDToggle(LEDG);
-   //Clear DMA1 Channel1 Half Transfer, Transfer Complete and Global interrupt pending bits
-    //DMA_ClearITPendingBit(DMA1_IT_GL1);
- // }
-//}
 
 
 
@@ -124,23 +136,5 @@ int getStatus(){
 
 
 
-/*In my interrupt-handler i just clear the flag and shut down the dma controller:
-
-void DMA1_Stream4_IRQHandler(void) {
-if(DMA_GetITStatus(DMA1_Stream4, DMA_IT_TCIF4) == SET) {
-toggleGPIO(GPIOD, GPIO_Pin_13);
-DMA_Cmd(DMA1_Stream4, DISABLE);
-DMA_ClearITPendingBit(DMA1_Stream4, DMA_IT_TCIF4);
-}
-
-
-//wait for DMA transfer to be finished
-while(status==0) {};
-    LEDToggle(LEDB);
-    for (i=0; i<ARRAYSIZE;i++)
-    {
-        destination[i]=source[i];
-    }
-}*/
 
 

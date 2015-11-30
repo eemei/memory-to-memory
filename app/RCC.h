@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "DMA.h"
+#include "Gpio.h"
 
 typedef struct RCC_Type RCC_t;
 struct RCC_Type{
@@ -47,5 +48,5 @@ struct RCC_Type{
 #define rcc	((RCC_t*)0x40023800)
 
 void DMAUnresetEnableClock();
-
+void gpioUnresetEnableClock(GPIO* port);
 #endif	//__RCC_H__
