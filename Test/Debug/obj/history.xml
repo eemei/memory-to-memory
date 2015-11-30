@@ -1,20 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m4 -mthumb -g2 -Wall -O0 -c -DSTM32F429ZI -DSTM32F429xx -DSTM32F429_439xx -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app\Core -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app\hardware -I..\..\..\..\..\..\..\Desktop -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app\Config -I..\..\..\..\..\..\..\Desktop\memory-to-memory">
-      <target file="RCC.o" lastModified="15151acd5c4">
-         <source file="..\..\..\app\RCC.c" lastModified="15151a54b7e"/>
+   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m4 -mthumb -g2 -Wall -O0 -c -DSTM32F429ZI -DSTM32F429xx -DSTM32F429_439xx -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app\Config -I..\..\..\..\..\..\..\Desktop\memory-to-memory -I..\..\..\..\..\..\..\Desktop -I..\..\..\..\..\..\..\Desktop\memory-to-memory\app\Core">
+      <target file="RCC.o" lastModified="15156ae0bcd">
+         <source file="..\..\..\app\RCC.c" lastModified="15156949b70"/>
       </target>
-      <target file="system_stm32f4xx.o" lastModified="15151acd686">
-         <source file="..\..\..\app\Config\system_stm32f4xx.c" lastModified="1514c2d9787"/>
+      <target file="system_stm32f4xx.o" lastModified="15156ae0c69">
+         <source file="..\..\..\app\Config\system_stm32f4xx.c" lastModified="15156949b60"/>
       </target>
-      <target file="main.o" lastModified="15151acd53d">
-         <source file="..\..\..\app\main.c" lastModified="1514c5e0131"/>
+      <target file="DMA.o" lastModified="15156ae0cf5">
+         <source file="..\..\..\app\DMA.c" lastModified="15156abea2a"/>
       </target>
-      <target file="Gpio.o" lastModified="15151acd797">
-         <source file="..\..\..\app\Gpio.c" lastModified="15151abf550"/>
+      <target file="main.o" lastModified="15156b424b6">
+         <source file="..\..\..\app\main.c" lastModified="15156b41079"/>
       </target>
-      <target file="startup_stm32f429xx.o" lastModified="15151acd5e8">
-         <source file="..\..\..\app\Config\startup_stm32f429xx.s" lastModified="1514c2d977f"/>
+      <target file="Gpio.o" lastModified="15156ae0d53">
+         <source file="..\..\..\app\Gpio.c" lastModified="15156949b70"/>
+      </target>
+      <target file="startup_stm32f429xx.o" lastModified="15156ae0bec">
+         <source file="..\..\..\app\Config\startup_stm32f429xx.s" lastModified="15156949b60"/>
       </target>
    </processor>
 </history>

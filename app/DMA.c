@@ -1,7 +1,7 @@
 #include "DMA.h"
 #include "stm32f4xx.h"
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx.h"
+//#include "stm32f4xx_hal_dma.h"
+//#include "stm32f4xx_hal_dma_ex.h"
 #include "gpio.h"
 
 /**
@@ -85,21 +85,21 @@ void configDMAM2M() {  // stream 7  channel 0
 	//DMA_ITConfig(DMA2_Channel0, DMA_IT_TC, ENABLE);
 	//interrupt
 	NVIC_EnableIRQ (DMA2_Stream7_IRQn);
-	DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
+	//////////DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
 
 }
 
 void DMA2_Channel0_IRQHandler(void)
 {
   //Test on DMA2 Channel0 Transfer Complete interrupt
-  if(DMA_GetITStatus(DMA2_IT_TC0))
-  {
+  //////////////if(DMA_GetITStatus(DMA2_IT_TC0))
+ ///////////////// {
       uint32_t status=1;
       toggleLED ();
       // LEDToggle(LEDG);
    //Clear DMA2 Channel0 Half Transfer, Transfer Complete and Global interrupt pending bits
-    DMA_ClearITPendingBit(DMA2_IT_GL0);
-  }
+   ///////////////////////// DMA_ClearITPendingBit(DMA2_IT_GL0);
+////////////////////  }
 }
 
 void resetTransferCompleteError(){
