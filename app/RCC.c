@@ -3,8 +3,8 @@
 void DMAUnresetEnableClock(){
 	//only DMA2 streams are able to perform memory-to-memory transfers
 
-	rcc->RCC_AHB1RSTR &= (1 << 22); 	//DMA2RST
-	rcc->RCC_AHB1ENR  |= (1 << 22);		//DMA2EN
+	rcc->RCC_AHB1RSTR &= ~(1 << 22); 	//DMA2RST
+	rcc->RCC_AHB1ENR  |= (1 << 22);		//DMA2EN	Clock the DMA2 for configuration change
 }
 
 void gpioUnresetEnableClock(GPIO* port){

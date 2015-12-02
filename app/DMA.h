@@ -98,8 +98,8 @@ struct DMA_t{
 #define DMA_PeripheralBurst_Incr16	3
 
 
-#define dataAdressSource		0xAAAAAAAA
-#define dataAdressDestination	0xFFFFFFFF
+#define dataAdressSource		0xAAAAAAAA			///????? address ?
+#define dataAdressDestination	0xFFFFFFFF			///?????
 
 #define DMA_MemoryDataSize_byte 	0
 #define DMA_MemoryDataSize_halfword 1
@@ -114,10 +114,23 @@ struct DMA_t{
 #define TC_interrupt_disabled 0
 #define TC_interrupt_enabled  1
 
+
+#define EN		0
+#define PINC	9
+#define MINC	10
+#define PL0		16
+#define PL1		17
+#define TCIE	4
+#define CTCIF7	27
+
+
 #define ARRAYSIZE 800
 #define DMA_STREAM_IRQHANDLER    DMA2_Stream0_IRQHandler
 
 void configDMAM2M();
+void DMA_memcpy8( uint16_t pDstAddr, uint16_t pSrcAddr, unsigned int uSize );
+int* getADC1Data();
+//int getAddrSrc();
 void resetTransferCompleteError();
 int getStatus();
 
