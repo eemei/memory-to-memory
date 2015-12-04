@@ -1,10 +1,10 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal_cortex.h"
 #include "DMA.h"
-#include "Gpio.h"
+//#include "Gpio.h"
 
 
-const uint32_t SRC_Const_Buffer[9]= {4,4,4,4,4,4,4,4,4,4};
+uint32_t SRC_Const_Buffer[9]= {1,1,1,1,1,1,1,1,1,1};
 uint32_t DST_Buffer[9]= {0,0,0,0,0,0,0,0,0,0};
 
 
@@ -17,10 +17,10 @@ TestStatus  TransferStatus = FAILED;
 void DMA2_Stream7_IRQHandler(void){
 	uint32_t status;
 
-	status = dma2->DMA_HISR;
+	status = dma2->HISR;
 
-	dma2->DMA_LISR &= 0x00000000;
-	dma2->DMA_HISR &= 0x00000000;
+	dma2->LISR &= 0x00000000;
+	dma2->HISR &= 0x00000000;
 	i++;
 }
 
@@ -36,44 +36,35 @@ void main()
 {
     unsigned int len;
     uint16_t Aftelem;// Befelem; //i;
-    uint32_t status;
-    //len = 9;
+    int status;
+    len = 9;
 
-    status = dma2->DMA_HISR;
+    status = dma2->HISR;
 
     configDMAM2M();
-    //DMA_memcpy8( dst1, src1, len );
-
-    DST_Buffer[8] = * getSourceData();
-    Aftelem = DST_Buffer[8];
-
-    /* Check if the transmitted and received data are equal */
-    TransferStatus = Buffercmp(Aftelem, DST_Buffer, 9);
-    /* TransferStatus = PASSED, if the transmitted and received data
-       are the same */
-    /* TransferStatus = FAILED, if the transmitted and received data
-       are different */
-
-
-  //  HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
-
-
-   /* AddrD[5] = * getDestinationData();
-    Aftelem = AddrD[5];*/
-
-
+    SRC_Const_Buffer[0]= 0xf;
+    DMA_memcpy8( DST_Buffer, SRC_Const_Buffer, len );
+    enableDMA();
+    delay(100);
+    uint32_t status2 = 0;
+    status2 = dma2->HISR;
+    int ptr2DST = DST_Buffer[0];
+    int ptr2SRC = SRC_Const_Buffer[0];
+    																/* Check if the transmitted and received data are equal */
+    //TransferStatus = Buffercmp(SRC_Const_Buffer, DST_Buffer, 9);
+    																/* TransferStatus = PASSED, if the transmitted and received data
+       	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	  	  	  	are the same */
+    																/* TransferStatus = FAILED, if the transmitted and received data
+       	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	are different */
+    HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
 
     while( 1 )
     {
-    	//uint16_t Befelem;
-        //Addr[5] = * getSourceData();
-       // Befelem = Addr[5];
-    //	writeOne(PIN_13, PORTG);
-    //	writeZero(PIN_14, PORTG);
-    //	_delay(100000);
-    }
 
+    }
 }
+
+
 
 void _delay(int delay){
 	while(delay != 0)
@@ -82,14 +73,3 @@ void _delay(int delay){
 
 
 
-
-
-
-
-
-
-//element = dst1[0];
-//if(status == 1)
-//	toggleLED ();
-//else
-//dma2->DMA_HIFCR |= ( 1 << CTCIF7 ); 					// Clears the corresponding TCIFx flag

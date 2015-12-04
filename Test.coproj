@@ -89,8 +89,8 @@
     <File name="Config/system_stm32f4xx.c" path="app/Config/system_stm32f4xx.c" type="1"/>
     <File name="app/DMA.c" path="app/DMA.c" type="1"/>
     <File name="Core/core_cm4.h" path="app/Core/core_cm4.h" type="1"/>
-    <File name="app/RCC.h" path="app/RCC.h" type="1"/>
     <File name="Config/startup_stm32f429xx.s" path="app/Config/startup_stm32f429xx.s" type="1"/>
+    <File name="app/RCC.h" path="app/RCC.h" type="1"/>
     <File name="Config/stm32f4xx_hal.h" path="app/Config/stm32f4xx_hal.h" type="1"/>
     <File name="hardware/stm32f4xx_hal_conf.h" path="app/Config/stm32f4xx_hal_conf.h" type="1"/>
     <File name="hardware" path="" type="2"/>
