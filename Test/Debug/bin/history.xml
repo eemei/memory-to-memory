@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -g2 -Map=Test.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/memory-to-memory -TC:/Users/D203C-01/Desktop/memory-to-memory/stm32f429zi_flash.ld -g">
-      <target file="Test.elf" lastModified="151625278bb">
-         <source file="..\obj\Gpio.o" lastModified="151624f18d4"/>
-         <source file="..\obj\RCC.o" lastModified="151624f16e1"/>
-         <source file="..\obj\main.o" lastModified="151624f1683"/>
-         <source file="..\obj\system_stm32f4xx.o" lastModified="151624f17c3"/>
-         <source file="..\obj\DMA.o" lastModified="151624f1859"/>
-         <source file="..\obj\startup_stm32f429xx.o" lastModified="151624f1702"/>
-         <source file="..\obj\stm32f4xx_hal_cortex.o" lastModified="15162527623"/>
+   <processor signature="4.9.3 -mcpu=cortex-m4 -mthumb -g2 -Map=Test.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/memory-to-memory -TC:/Users/D203C-01/Desktop/memory-to-memory/stm32f429zi_flash.ld -g">
+      <target file="Test.elf" lastModified="15176bbef13">
+         <source file="..\obj\Gpio.o" lastModified="1517672d483"/>
+         <source file="..\obj\RCC.o" lastModified="15176aa52b9"/>
+         <source file="..\obj\main.o" lastModified="15176bbec64"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="1517672d2de"/>
+         <source file="..\obj\DMA.o" lastModified="15176b35a17"/>
+         <source file="..\obj\startup_stm32f429xx.o" lastModified="1517672cdee"/>
+         <source file="..\obj\stm32f4xx_hal_cortex.o" lastModified="1517672d1a6"/>
       </target>
    </processor>
 </history>

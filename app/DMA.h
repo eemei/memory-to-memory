@@ -61,6 +61,10 @@ struct DMA_t{
 };
 
 
+typedef enum {FAILED = 0,
+			PASSED = !FAILED
+			} TestStatus;
+
 #define dma2 ((DMA_reg*)0x40026400)
 
 #define channel0	0
@@ -98,8 +102,6 @@ struct DMA_t{
 #define DMA_PeripheralBurst_Incr16	3
 
 
-#define dataAdressSource		0xAAAAAAAA			///????? address ?
-#define dataAdressDestination	0xFFFFFFFF			///?????
 
 #define DMA_MemoryDataSize_byte 	0
 #define DMA_MemoryDataSize_halfword 1
@@ -123,15 +125,20 @@ struct DMA_t{
 #define TCIE	4
 #define CTCIF7	27
 
+#define DMAx_EN			1
+#define FIFO_DISABLE	0
 
 #define ARRAYSIZE 800
 #define DMA_STREAM_IRQHANDLER    DMA2_Stream0_IRQHandler
 
 void configDMAM2M();
 void DMA_memcpy8( uint16_t pDstAddr, uint16_t pSrcAddr, unsigned int uSize );
-int* getADC1Data();
-//int getAddrSrc();
-void resetTransferCompleteError();
-int getStatus();
+int* getSourceData();
+int* getDestinationData();
+TestStatus Buffercmp(const uint32_t* pBuffer, uint32_t* pBuffer1, uint16_t BufferLength);
+//int* getADC1Data();
+//void resetTransferCompleteError();
+//int getStatus();
+//void enableDMA();
 
 #endif	//__DMA_H__
