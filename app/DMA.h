@@ -88,6 +88,12 @@ typedef enum {FAILED = 0,
 #define TC_interrupt_disabled 0
 #define TC_interrupt_enabled  1
 
+#define Quater_full_FIFO		0
+#define Half_full_FIFO			1
+#define	ThreeperFour_full_FIFO	2
+#define Full_FIFO				3
+
+#define FTH		0
 
 #define EN		0
 #define PINC	9
@@ -95,7 +101,12 @@ typedef enum {FAILED = 0,
 #define PL0		16
 #define PL1		17
 #define TCIE	4
+
+#define CHTIF7	26
 #define CTCIF7	27
+
+#define PINC	9
+#define MINC	10
 
 #define DMAx_EN			1
 #define FIFO_DISABLE	0
@@ -106,6 +117,7 @@ typedef enum {FAILED = 0,
 void configDMAM2M();
 void DMA_memcpy8( uint32_t pDstAddr, uint32_t pSrcAddr, unsigned int uSize );
 void enableDMA();
+void DMA_interruptTransfer();
 //int* getSourceData();
 //int* getDestinationData();
 //TestStatus Buffercmp(const uint32_t* pBuffer, uint32_t* pBuffer1, uint16_t BufferLength);
