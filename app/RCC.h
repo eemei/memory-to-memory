@@ -5,6 +5,7 @@
 #include "DMA.h"
 #include "Gpio.h"
 
+
 typedef struct RCC_Type RCC_t;
 struct RCC_Type{
 	volatile uint32_t RCC_CR;
@@ -44,9 +45,13 @@ struct RCC_Type{
 	volatile uint32_t RCC_PLLSAICFGR;
 	volatile uint32_t RCC_DCKCFGR;
 };
+//#define rcc	((RCC_t*)0x40023800)
+//#define RCC_BASE_ADDRESS 0x40023800
+#define rcc	((RCC_t*)RCC_BASE_ADDRESS)
 
-#define rcc	((RCC_t*)0x40023800)
 
 void DMAUnresetEnableClock();
 void gpioUnresetEnableClock(GPIO* port);
+
+#include "Registers.h"
 #endif	//__RCC_H__

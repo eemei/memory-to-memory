@@ -1,12 +1,14 @@
 #include "stm32f4xx.h"
-#include "stm32f4xx_hal_cortex.h"
+//#include "stm32f4xx_hal_cortex.h"
 #include "DMA.h"
 //#include "Gpio.h"
 
 
-uint32_t SRC_Const_Buffer[9]= {123,1,3,5,6,7,8};
-uint32_t DST_Buffer[9]= {0};
-uint32_t ThirdTarget_Buffer[9] = {7};
+uint32_t SRC_Const_Buffer[]= {0x12345678, 0xdeadbeef, 0xc0ffee45, 0x0badface, 0x789abcde, 0x2a3b4c5d, 0x6b3cde42,0xcade2917,0xbcd6745a,
+								0xfadd1257,0xdef37846,0x12785abc,0x92837465, 0xa7b80919, 0x4726fabe, 0xbd87af91, 0xa3cde978};
+uint32_t DST_Buffer[]= {0x00000000, 0x11111111, 0x22222222, 0x333333333, 0x4444444444, 0x55555555, 0x66666666, 0x77777777, 0x888888888,
+						0x999999999, 0x00001111, 0x22223333, 0x44445555, 0x66667777, 0x999991111, 0x55552222};
+uint32_t ThirdTarget_Buffer[] = {7};
 
 
 
@@ -46,21 +48,20 @@ void DMA2_Stream7_IRQHandler(void){
 
 void main()
 {
-    unsigned int len;
+    unsigned int len = 0;
     uint16_t Aftelem =0 ;
     int status = 0;
-    len = 9;
+    len = 18;
 
     status = dma2->HISR;
     configDMAM2M();
     DMA_memcpy8( DST_Buffer, SRC_Const_Buffer, len );
-    //DMA_memcpy8( ThirdTarget_Buffer, SRC_Const_Buffer, len );
     enableDMA();
     uint32_t status2 = 0;
     status2 = dma2->HISR;
 
-    int ptr2DST = DST_Buffer[6];
-    int ptr2SRC = SRC_Const_Buffer[6];
+    int ptr2DST = DST_Buffer[7];
+    int ptr2SRC = SRC_Const_Buffer[7];
 
 
     HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);

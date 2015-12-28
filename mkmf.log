@@ -1,0 +1,8 @@
+find_executable: checking for arm-none-eabi-gcc... -------------------- yes
+
+--------------------
+
+find_executable: checking for arm-none-eabi-objcopy... -------------------- yes
+
+--------------------
+

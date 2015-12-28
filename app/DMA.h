@@ -30,15 +30,6 @@ struct DMA_Type{
 #define dma1   ((DMA_reg*)0x40026000)
 #define dma2   ((DMA_reg*)0x40026400)
 
-
-
-
-
-typedef enum {FAILED = 0,
-			PASSED = !FAILED
-			} TestStatus;
-
-
 #define channel0	0
 #define channel1	1
 #define channel2	2
@@ -125,5 +116,13 @@ void DMA_interruptTransfer();
 //void resetTransferCompleteError();
 //int getStatus();
 //void enableDMA();
+
+
+
+
+
+typedef enum {FAILED = 0,
+			PASSED = !FAILED
+			} TestStatus;
 
 #endif	//__DMA_H__
