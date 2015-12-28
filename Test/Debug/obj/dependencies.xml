@@ -4,7 +4,7 @@
       <source file="..\..\..\..\..\CoIDE\workspace\STM32Cube_FW_F4_V1.5.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h" lastModified="14c0ebfff30">
          <include file="..\..\..\..\..\CoIDE\workspace\STM32Cube_FW_F4_V1.5.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h"/>
       </source>
-      <source file="..\..\..\app\DMA.c" lastModified="151e2fd2731">
+      <source file="..\..\..\app\DMA.c" lastModified="151e7d8c0d7">
          <include file="..\..\..\app\DMA.h"/>
          <include file="..\..\..\app\Gpio.h"/>
          <include file="..\..\..\app\RCC.h"/>

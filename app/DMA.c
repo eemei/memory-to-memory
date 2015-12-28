@@ -22,10 +22,10 @@ void configDMAM2M(void) {  // stream 7  channel 0
 
 	//source and destination data size word=32bit
 	dma2->S7.CR &= ~(2 << 13);							/* DMA_MemoryDataSize_Word */
-	dma2->S7.CR |= (DMA_MemoryDataSize_halfword << 13);
+	dma2->S7.CR |= (DMA_MemoryDataSize_Word << 13);
 
 	dma2->S7.CR &= ~(2 << 11);							/* DMA_PeripheralDataSize_Word */
-	dma2->S7.CR |= (DMA_PeripheralDataSize_halfword << 11);
+	dma2->S7.CR |= (DMA_PeripheralDataSize_Word << 11);
 
 	//MEMORY AND PERIPHERAL increment disable
 	dma2->S7.CR &= ~(1 << MINC);
@@ -35,7 +35,7 @@ void configDMAM2M(void) {  // stream 7  channel 0
 	dma2->S7.CR |= (DMA_PeripheralInc_Enable << PINC);
 
 	dma2->S7.CR &= ~(2 << 23);
-	dma2->S7.CR |= (DMA_MemoryBurst_Incr8 << 23);
+	dma2->S7.CR |= (DMA_MemoryBurst_Single << 23);
 
 
 	dma2->S7.CR &= ~(2 << 21);
@@ -43,10 +43,10 @@ void configDMAM2M(void) {  // stream 7  channel 0
 	uint32_t data3 = dma2->S7.CR;
 
 
-	dma2->S7.FCR &= (11 << FTH);
-	dma2->S7.FCR |= (Full_FIFO << FTH);
+	//dma2->S7.FCR &= (11 << FTH);
+	//dma2->S7.FCR |= (Full_FIFO << FTH);
 
-	//dma2->S7.FCR = FIFO_DISABLE;               		 	//Disable FIFO
+	dma2->S7.FCR = FIFO_DISABLE;               		 	//Disable FIFO
 	int dma5 = dma2->S7.FCR;
 
 	dma2->S7.CR &= ~(15 << 1);
