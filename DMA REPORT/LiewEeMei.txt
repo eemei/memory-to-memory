@@ -1,0 +1,319 @@
+#include "DMA.h"
+#include "gpio.h"
+#include "RCC.h"
+
+
+void configDMAM2M(void) {  // stream 7  channel 0
+	DMAUnresetEnableClock();
+
+	dma2->S7.CR &= ~(1 << EN);						//Stream Disable
+	uint32_t data = dma2->S7.CR; 	 	 	 	 	// *read-only ->stream (enabled) */
+
+	dma2->S7.CR |= ( 1 << PINC ) | ( 1 << MINC ) | ( 1 << PL0 ) | ( 1 << PL1 ) ;//| ( 1 << TCIE );
+	uint32_t data2 = dma2->S7.CR;
+
+	dma2->S7.CR &=  ~(3 << 25);
+	dma2->S7.CR |= (channel0 << 25);  				/* CHANNEL 0 */
+
+	dma2->S7.CR &= ~(2 << 6);
+	dma2->S7.CR |= (M2M << 6 );      				/* DIRECTION TRANSFER MODE M2M */
+
+	//MEMORY & PERIPHERAL increment disable
+	dma2->S7.CR &= ~(1 << MINC);
+	dma2->S7.CR |= (DMA_MemoryInc_Enable << MINC);
+
+	dma2->S7.CR &= ~(1 << PINC);
+	dma2->S7.CR |= (DMA_PeripheralInc_Enable << PINC);
+
+	//peripheral burst
+	dma2->S7.CR &= ~(2 << 21);
+	dma2->S7.CR |= (DMA_PeripheralBurst_Single << 21);
+
+
+	dma2->S7.CR &= ~(15 << 1);
+	dma2->S7.CR |= (15 << 1);					// enable all interrupt(TC, HT, TE) and EN bit
+}
+
+void DatasizeBurstFIFO (uint32_t MemorySize, uint32_t PeripheralSize, uint32_t Burst, uint32_t FIFO){
+
+	//source and destination data size word=32bit
+		dma2->S7.CR &= ~(2 << 13);
+		dma2->S7.CR |= (MemorySize << 13);
+
+		dma2->S7.CR &= ~(2 << 11);
+		dma2->S7.CR |= (PeripheralSize << 11);
+
+		//FIFO
+		dma2->S7.FCR &= (11 << FTH);
+		dma2->S7.FCR |= (FIFO << FTH);
+
+		dma2->S7.CR &= ~(2 << 23);
+		dma2->S7.CR |= (Burst << 23);
+}
+
+void DMA_memcpy8( uint32_t pDstAddr, uint32_t pSrcAddr, unsigned int uSize ){
+/* As per page 233 this is how to configure a stream */
+	if( ( dma2->S7.CR & ( 1 << EN ) ) == 1 ){
+         dma2->S7.CR &= ~( 1 << EN );  					// 1. If stream is enabled, disable it
+         while( ( dma2->S7.CR & ( 1 << EN ) == 1) );
+    }
+	dma2->S7.PAR =  (uint32_t)pSrcAddr;					/* source address */
+	dma2->S7.M0AR = (uint32_t)pDstAddr; 				/* destination address */
+    dma2->S7.NDTR = uSize;     							// Number of data items to transfer
+}
+
+void enableDMA(){
+	dma2->S7.CR &= ~1;
+	dma2->S7.CR |= 1;     						// Stream Enable
+}
+
+
+#include "RCC.h"
+
+void DMAUnresetEnableClock(){
+	//only DMA2 streams are able to perform memory-to-memory transfers
+	rcc->RCC_AHB1RSTR &= ~(1 << 22); 	//DMA2RST
+	uint32_t data = rcc->RCC_AHB1RSTR;
+	rcc->RCC_AHB1ENR &= 0;
+	rcc->RCC_AHB1ENR  |= (1 << 22);		//DMA2EN	Clock the DMA2 for configuration change
+	uint32_t data1 = rcc->RCC_AHB1ENR ;
+	//DMA1 IS 21 POSITION
+}
+
+void gpioUnresetEnableClock(GPIO* port){
+	int shift = ((int)port - (0x40020000))/(0x400);
+	rcc->RCC_AHB1RSTR &= ~(1 << (shift));
+	rcc->RCC_AHB1ENR |= (0x00100000 | ~(0 << (shift)));
+}
+#include "stm32f4xx.h"
+#include "DMA.h"
+
+uint32_t SRC_Const_Buffer[]= {0x12345678, 0xdeadbeef, 0xc0ffee45, 0x0badface, 0x789abcde, 0x2a3b4c5d, 0x6b3cde42,0xcade2917,0xbcd6745a,
+				0xfadd1257, 0xdef37846, 0x12785abc,0x92837465, 0xa7b80919, 0x4726fabe, 0xbd87af91};
+uint32_t DST_Buffer[]= 	{0x00000000, 0x11111111, 0x22222222, 0x333333333, 0x4444444444,0x55555555, 0x66666666,0x77777777,0x888888888,
+			0x999999999, 0x00001111,0x22223333, 0x44445555, 0x66667777, 0x999991111, 0x55552222};
+uint32_t ThirdTarget_Buffer[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+
+
+void DMA2_Stream7_IRQHandler(void)
+{
+	uint32_t statusHISR;
+
+	dma2->S7.CR &= ~(15 << 1);				// clear interrupt enable bit
+	dma2->LISR &= 0x00000000;				// clear the interrupt status & flag
+	dma2->HISR &= 0x00000000;
+	dma2->HIFCR = (uint32_t)0x0f400000;		// clear any pending (old) DMA2 Stream 7 interrupts
+
+	// start transfer to another memory
+	dma2->S7.CR &= ~(0xffff);				// clear configure register
+
+	configDMAM2M();							// everything setup but not enabled
+	unsigned int len = 9;
+	DMA_memcpy8( ThirdTarget_Buffer, DST_Buffer, len);
+	DatasizeBurstFIFO (DMA_MemoryDataSize_Word, DMA_PeripheralDataSize_Word, DMA_MemoryBurst_Single, Full_FIFO);
+	enableDMA();							// everything setup and enabled
+
+	statusHISR = dma2->HISR;
+	int Thirdptr2DST = ThirdTarget_Buffer[0];
+	int Secondptr2SRC = DST_Buffer[0];
+}
+
+
+
+void main()
+{
+    unsigned int len = 0;
+    int status = 0;
+    len = 18;
+
+    status = dma2->HISR;
+    configDMAM2M();
+
+    DatasizeBurstFIFO (DMA_MemoryDataSize_Word,
+    					DMA_PeripheralDataSize_Word,
+    					DMA_MemoryBurst_Incr4,
+    					Full_FIFO);
+
+    DMA_memcpy8( DST_Buffer, SRC_Const_Buffer, len );
+    enableDMA();
+    status = dma2->HISR;
+
+    int ptr2DST = DST_Buffer[7];
+    int ptr2SRC = SRC_Const_Buffer[7];
+
+    HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+
+    while( 1 )
+    {
+    }
+}
+
+
+
+
+#ifndef	__DMA_H__
+#define	__DMA_H__
+#include <stdint.h>
+
+typedef struct DMA_Type DMA_reg;
+typedef struct{
+	  volatile uint32_t CR;
+	  volatile uint32_t NDTR;
+	  volatile uint32_t PAR;
+	  volatile uint32_t M0AR;
+	  volatile uint32_t M1AR;
+	  volatile uint32_t FCR;
+}Stream_t;
+
+struct DMA_Type{
+  volatile uint32_t LISR;
+  volatile uint32_t HISR;
+  volatile uint32_t LIFCR;
+  volatile uint32_t HIFCR;
+  Stream_t	S0;
+  Stream_t	S1;
+  Stream_t	S2;
+  Stream_t	S3;
+  Stream_t	S4;
+  Stream_t	S5;
+  Stream_t	S6;
+  Stream_t	S7;
+};
+
+#define dma1   ((DMA_reg*)0x40026000)
+#define dma2   ((DMA_reg*)0x40026400)
+
+#define channel0	0
+#define channel1	1
+#define channel2	2
+#define channel3	3
+#define channel4	4
+#define channel5	5
+#define channel6	6
+#define channel7	7
+
+#define P2M	0
+#define M2P	1
+#define M2M	2
+
+#define Priority_Low		0
+#define Priority_Medium		1
+#define Priority_High		2
+#define Priority_VeryHigh	3
+
+#define DMA_PeripheralInc_Enable	1
+#define DMA_PeripheralInc_Disable	0
+
+#define DMA_MemoryInc_Enable		1
+#define DMA_MemoryInc_Disable		0
+
+#define DMA_MemoryBurst_Single	0
+#define DMA_MemoryBurst_Incr4	1
+#define DMA_MemoryBurst_Incr8	2
+#define DMA_MemoryBurst_Incr16	3
+
+#define DMA_PeripheralBurst_Single	0
+#define DMA_PeripheralBurst_Incr4	1
+#define DMA_PeripheralBurst_Incr8	2
+#define DMA_PeripheralBurst_Incr16	3
+
+
+
+#define DMA_MemoryDataSize_byte 	0
+#define DMA_MemoryDataSize_halfword 1
+#define DMA_MemoryDataSize_Word 	2
+#define DMA_MemoryDataSize_reserved 3
+
+#define DMA_PeripheralDataSize_byte	0
+#define DMA_PeripheralDataSize_halfword	1
+#define DMA_PeripheralDataSize_Word 	2
+#define DMA_PeripheralDataSize_reserved	3
+
+#define TC_interrupt_disabled 0
+#define TC_interrupt_enabled  1
+
+#define Quater_full_FIFO		0
+#define Half_full_FIFO			1
+#define	ThreeperFour_full_FIFO		2
+#define Full_FIFO			3
+
+#define FTH		0
+
+#define EN		0
+#define PINC	9
+#define MINC	10
+#define PL0	16
+#define PL1	17
+#define TCIE	4
+
+#define CHTIF7	26
+#define CTCIF7	27
+
+#define PINC	9
+#define MINC	10
+
+#define DMAx_EN		1
+#define FIFO_DISABLE	0
+
+
+void configDMAM2M();
+void DMA_memcpy8( uint32_t pDstAddr, uint32_t pSrcAddr, unsigned int uSize );
+void enableDMA();
+void DatasizeBurstFIFO (uint32_t MemorySize, uint32_t PeripheralSize, uint32_t Burst, uint32_t FIFO);
+
+
+#ifndef	__RCC_H__
+#define	__RCC_H__
+
+#include <stdint.h>
+#include "DMA.h"
+#include "Gpio.h"
+
+
+typedef struct RCC_Type RCC_t;
+struct RCC_Type{
+	volatile uint32_t RCC_CR;
+	volatile uint32_t RCC_PLLCFGR;
+	volatile uint32_t RCC_CFGR;
+	volatile uint32_t RCC_CIR;
+	volatile uint32_t RCC_AHB1RSTR;
+	volatile uint32_t RCC_AHB2RSTR;
+	volatile uint32_t RCC_AHB3RSTR;
+	volatile uint32_t RESERVE_0;
+	volatile uint32_t RCC_APB1RSTR;
+	volatile uint32_t RCC_APB2RSTR;
+	volatile uint32_t RESERVE_1;
+	volatile uint32_t RESERVE_2;
+	volatile uint32_t RCC_AHB1ENR;
+	volatile uint32_t RCC_AHB2ENR;
+	volatile uint32_t RCC_AHB3ENR;
+	volatile uint32_t RESERVE_3;
+	volatile uint32_t RCC_APB1ENR;
+	volatile uint32_t RCC_APB2ENR;
+	volatile uint32_t RESERVE_4;
+	volatile uint32_t RESERVE_5;
+	volatile uint32_t RCC_AHB1LPENR;
+	volatile uint32_t RCC_AHB2LPENR;
+	volatile uint32_t RCC_AHB3LPENR;
+	volatile uint32_t RESERVE_6;
+	volatile uint32_t RCC_APB1LPENR;
+	volatile uint32_t RCC_APB2LPENR;
+	volatile uint32_t RESERVE_7;
+	volatile uint32_t RESERVE_8;
+	volatile uint32_t RCC_BDCR;
+	volatile uint32_t RCC_CSR;
+	volatile uint32_t RESERVE_9;
+	volatile uint32_t RESERVE_10;
+	volatile uint32_t RCC_SSCGR;
+	volatile uint32_t RCC_PLLI2SCFGR;
+	volatile uint32_t RCC_PLLSAICFGR;
+	volatile uint32_t RCC_DCKCFGR;
+};
+#define rcc	((RCC_t*)0x40023800)
+
+void DMAUnresetEnableClock();
+void gpioUnresetEnableClock(GPIO* port);
+
+#include "Registers.h"
+#endif	//__RCC_H__

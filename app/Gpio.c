@@ -1,20 +1,7 @@
 #include "Gpio.h"
-//#include "stm32f4xx_hal_rcc.h"
-
-
 void delay (uint32_t delaycount){
 	while (delaycount != 0){
 		delaycount--;
-	}
-}
-
-void toggleLED (){
-	configurePort(GPIO_MODE_OUTPUT, PIN_14,	PORTG);
-	 while(1) {
-	delay(1000000);
-	writeOne(PIN_14, PORTG);
-	delay(1000000);
-	writeZero(PIN_14, PORTG);
 	}
 }
 

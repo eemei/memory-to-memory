@@ -53,7 +53,7 @@ struct GPIO_t{
 #define GPIOB_BASE_ADDRESS 	0x40020400
 #define GPIOC_BASE_ADDRESS 	0x40020800
 #define GPIOA_BASE_ADDRESS	0x40020000
-//#define RCC_BASE_ADDRESS 	0x40023800
+#define RCC_BASE_ADDRESS 	0x40023800// use scripts need comments
 
 #define PORTG ((GPIO *)GPIOG_BASE_ADDRESS)
 #define PORTB ((GPIO *)GPIOB_BASE_ADDRESS)
@@ -69,7 +69,6 @@ void configurePortInput(int pinNum, GPIO *port);
 void writeOne(uint16_t pinNum, GPIO *port);
 void writeZero(uint16_t pinNum, GPIO *port);
 void portBitSetReset (int pinNum, GPIO *port);
-void toggleLED ();
 void delay (uint32_t delaycount);
 
 

@@ -102,27 +102,11 @@ struct DMA_Type{
 #define DMAx_EN			1
 #define FIFO_DISABLE	0
 
-#define ARRAYSIZE 800
-#define DMA_STREAM_IRQHANDLER    DMA2_Stream0_IRQHandler
 
 void configDMAM2M();
 void DMA_memcpy8( uint32_t pDstAddr, uint32_t pSrcAddr, unsigned int uSize );
 void enableDMA();
-void DMA_interruptTransfer();
-//int* getSourceData();
-//int* getDestinationData();
-//TestStatus Buffercmp(const uint32_t* pBuffer, uint32_t* pBuffer1, uint16_t BufferLength);
-//int* getADC1Data();
-//void resetTransferCompleteError();
-//int getStatus();
-//void enableDMA();
+void DatasizeBurstFIFO (uint32_t MemorySize, uint32_t PeripheralSize, uint32_t Burst, uint32_t FIFO);
 
-
-
-
-
-typedef enum {FAILED = 0,
-			PASSED = !FAILED
-			} TestStatus;
 
 #endif	//__DMA_H__
